@@ -7,12 +7,31 @@
     <meta name="DESCRIPTION" content="Puzzle game, image divided 4x4, a software school project">
 
     <link rel="stylesheet" href="css/styles.css">
-    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
     <script src="js/puzzle.js"></script>
 
     <title>Puzzle Game</title>
 </head>
+
 <body>
-TEST
+<header>
+    <h1>Puzzle Game</h1>
+</header>
+
+<main>
+    <form id="uploadform" class="uploadform" action="index.html">
+        <input type="file" id="fileName">
+    </form>
+
+    <canvas id="js-canvas-dynamic" class="hidden"></canvas>
+
+    <div class="game-container">
+        <div class="row one"></div>
+        <div class="row two"></div>
+        <div class="row three"></div>
+        <div class="row four"></div>
+    </div>
+</main>
+
 </body>
 </html>

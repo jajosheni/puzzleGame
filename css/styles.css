@@ -1,0 +1,11 @@
+.hidden{
+    display: none;
+}
+
+.game-container{
+    font-size:0;
+}
+
+.game-container .row div{
+    display: inline-block;
+}
