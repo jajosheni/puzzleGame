@@ -4,8 +4,28 @@
 
 .game-container{
     font-size:0;
+    max-width: 1000px;
+    min-width: 600px;
 }
 
 .game-container .row div{
     display: inline-block;
+}
+
+.row{
+    max-width: 100%;
+}
+
+.piece-container{
+    width: 25%;
+}
+
+.puzzle-piece{
+    max-width:100%;
+    max-height:100%;
+    border: 1px solid black;
+}
+
+.puzzle-piece:hover{
+    opacity: .5;
 }

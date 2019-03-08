@@ -53,7 +53,7 @@ function createPuzzle(state){
     let piecesHTML = [];
 
     for(let i=0; i < state.piecesArray.length; i++){
-        let temp = `<div>
+        let temp = `<div class="piece-container">
                         <img src="${state.piecesArray[i]}" class="hidden">
                         <img src="${state.shuffled[i]}" class="puzzle-piece">
                     </div>`;
