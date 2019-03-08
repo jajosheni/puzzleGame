@@ -3,6 +3,7 @@ let state = { //Keep the state in javascript not in DOM
     ROWS : 4,
     piecesArray : [],
     shuffled : [],
+    clickedPiece : null,
 };
 
 function startGame(inputImg){ //After getting the image, start the game.
@@ -55,7 +56,7 @@ function createPuzzle(state){
     for(let i=0; i < state.piecesArray.length; i++){
         let temp = `<div class="piece-container">
                         <img src="${state.piecesArray[i]}" class="hidden">
-                        <img src="${state.shuffled[i]}" class="puzzle-piece">
+                        <img src="${state.shuffled[i]}" class="puzzle-piece" onclick="swapPieces(this, state);">
                     </div>`;
         piecesHTML.push(temp);
     }
@@ -67,6 +68,18 @@ function renderPuzzle(piecesHTML, state){
     $('.row.two').append(piecesHTML.slice(state.ROWS , state.ROWS*2));
     $('.row.three').append(piecesHTML.slice(state.ROWS*2 , state.ROWS*3));
     $('.row.four').append(piecesHTML.slice(state.ROWS*3 , state.ROWS*4));
+}
+
+function swapPieces(e, state){
+    if(!state.clickedPiece){
+        state.clickedPiece = e;
+    }else{
+        let temp = e.src;
+        e.src = state.clickedPiece.src;
+        state.clickedPiece.src = temp;
+
+        state.clickedPiece=null;
+    }
 }
 
 function waitGame(){
