@@ -10,9 +10,10 @@ function startGame(inputImg){ //After getting the image, start the game.
     state.img.addEventListener('load', splitImage,false); // call function splitImage
                                                                // false-> loads bubbling in the end
     state.img.src = inputImg.files[0].name;
+    $('.uploadform').remove();
 }
 
-function splitImage(e){ // Split the image into 16 equal parts
+function splitImage(){ // Split the image into 16 equal parts
     let ctx = $('#js-canvas-dynamic')[0];
     let puzzle = ctx.getContext('2d');
 
@@ -36,8 +37,17 @@ function splitImage(e){ // Split the image into 16 equal parts
             puzzle.clearRect(0,0, ctx.width,ctx.height);
         }
     }
-    shuffleArray(state);
-    createPuzzle(state);
+    //Remove Canvas & make a button eventListener
+    $(ctx).remove();
+    $('.shuffleButton').click(function(){
+        clearHTML(state);
+        shuffleArray(state);
+        createPuzzle(state);
+    });
+}
+
+function clearHTML(){
+    $('.row').empty();
 }
 
 function shuffleArray(state){
@@ -51,8 +61,8 @@ function shuffleArray(state){
 }
 
 function createPuzzle(state){
-    let piecesHTML = [];
-
+    let piecesHTML;
+    piecesHTML=[];
     for(let i=0; i < state.piecesArray.length; i++){
         let temp = `<div class="piece-container">
                         <img src="${state.piecesArray[i]}" class="hidden-puzzle-piece">
@@ -87,14 +97,21 @@ function swapPieces(e, state){
 
 function checkPuzzle(state){
     let win = true;
+    let shuffle=false;
     let gameContainer = $('.game-container .piece-container');
     for(let i=0; i<gameContainer.length; i++){
         if(gameContainer[i].childNodes[1].src === gameContainer[i].childNodes[3].src){
             $(gameContainer[i].childNodes[3]).addClass('true-place');
+            shuffle=true;
         }else{
             win=false;
+            $(gameContainer[i].childNodes[3]).removeClass('true-place');
         }
     }
+    if(shuffle){
+        $('.shuffleButton').remove();
+    }
+
     if(win){
         alert('YOU WON');
         $('.true-place').removeClass('true-place');

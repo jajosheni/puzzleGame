@@ -18,21 +18,24 @@
     <h1>Puzzle Game</h1>
 </header>
 
-<main>
-    <form id="uploadform" class="uploadform" action="index.html">
-        <input type="file" id="fileName">
-    </form>
+<div class="game-container">
+    <div>
+        <form id="uploadform" class="uploadform" action="index.html">
+            <input type="file" id="fileName">
+        </form>
+        <button id="shuffle" class="shuffleButton">
+            <span class="button-text">Shuffle</span>
+        </button>
+    </div>
 
     <canvas id="js-canvas-dynamic" class="hidden"></canvas>
 
-    <div class="game-container">
-        <div class="row one"></div>
-        <div class="row two"></div>
-        <div class="row three"></div>
-        <div class="row four"></div>
-    </div>
+    <div class="row one"></div>
+    <div class="row two"></div>
+    <div class="row three"></div>
+    <div class="row four"></div>
+</div>
 
-</main>
 
 </body>
 </html>

@@ -1,14 +1,50 @@
+@import url('https://fonts.googleapis.com/css?family=Staatliches');
+
 *{
     box-sizing: border-box;
+    font-family: Helvetica, serif;
 }
 
 body{
     background-color: #282B2A;
     color: white;
+    max-width:60%;
+    margin-left:auto;
+    margin-right:auto;
+    text-align: center;
 }
 
-h1{
-    font-family: Helvetica, serif;
+form{
+    display:inline-block;
+}
+
+.shuffleButton{
+    display: inline-block;
+    max-width: 100%;
+    margin: auto;
+    width: 8.0em;
+    height: 2.2em;
+    background-color: #2087e5;
+    color: white;
+    border: none;
+    border-radius: 1em;
+    min-height: 2em;
+    margin-bottom: 20px;
+}
+
+.shuffleButton:hover{
+    background-color: #159858;
+}
+
+.shuffleButton:active{
+    background-color: #155997;
+}
+
+.button-text{
+    max-width: 100%;
+    font-size: 1em;
+    font-family: 'Staatliches', serif;
+    letter-spacing: 0.15em;
 }
 
 .hidden{
@@ -20,8 +56,9 @@ h1{
 }
 
 .game-container{
+    margin: 20px auto 20px auto;
     font-size:0;
-    max-width: 1000px;
+    max-width: 90%;
     min-width: 600px;
 }
 
