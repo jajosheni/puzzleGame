@@ -55,12 +55,13 @@ function createPuzzle(state){
 
     for(let i=0; i < state.piecesArray.length; i++){
         let temp = `<div class="piece-container">
-                        <img src="${state.piecesArray[i]}" class="hidden">
+                        <img src="${state.piecesArray[i]}" class="hidden-puzzle-piece">
                         <img src="${state.shuffled[i]}" class="puzzle-piece" onclick="swapPieces(this, state);">
                     </div>`;
         piecesHTML.push(temp);
     }
     renderPuzzle(piecesHTML, state);
+    checkPuzzle();
 }
 
 function renderPuzzle(piecesHTML, state){
@@ -73,12 +74,30 @@ function renderPuzzle(piecesHTML, state){
 function swapPieces(e, state){
     if(!state.clickedPiece){
         state.clickedPiece = e;
+        $(state.clickedPiece).addClass('clicked-puzzle');
     }else{
         let temp = e.src;
         e.src = state.clickedPiece.src;
         state.clickedPiece.src = temp;
-
+        $(state.clickedPiece).removeClass('clicked-puzzle');
         state.clickedPiece=null;
+        checkPuzzle(state);
+    }
+}
+
+function checkPuzzle(state){
+    let win = true;
+    let gameContainer = $('.game-container .piece-container');
+    for(let i=0; i<gameContainer.length; i++){
+        if(gameContainer[i].childNodes[1].src === gameContainer[i].childNodes[3].src){
+            $(gameContainer[i].childNodes[3]).addClass('true-place');
+        }else{
+            win=false;
+        }
+    }
+    if(win){
+        alert('YOU WON');
+        $('.true-place').removeClass('true-place');
     }
 }
 
