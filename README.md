@@ -1,2 +1,2 @@
 # puzzleGame
-Simple puzzle game.
+Simple Drag n Drop puzzle game.

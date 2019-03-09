@@ -99,7 +99,7 @@ function createPuzzle(state){
         piecesHTML.push(temp);
     }
     renderPuzzle(piecesHTML, state);
-    checkPuzzle();
+    checkPuzzle(state);
 }
 
 function renderPuzzle(piecesHTML, state){
@@ -129,37 +129,40 @@ function swapPieces(e, state){
 }
 
 function checkPuzzle(state){
-    let truePuzzles=0;
+    let truePuzzles = 0;
     let win = true;
-    let shuffle = false;
 
     let gameContainer = $('.game-container .piece-container');
     for(let i=0; i<gameContainer.length; i++){
-        if(gameContainer[i].childNodes[1].src === gameContainer[i].childNodes[3].src){
-            $(gameContainer[i].childNodes[3]).addClass('true-place');
+        if(gameContainer[i].childNodes[1].src === gameContainer[i].childNodes[3].src){ //childnode[1] hidden img
+            $(gameContainer[i].childNodes[3]).addClass('true-place');// childnode[3] shuffled piece
             truePuzzles++;
-            shuffle=true;
         }else{
             win=false;
             $(gameContainer[i].childNodes[3]).removeClass('true-place');
         }
     }
 
-    if(shuffle){
+    if($('.shuffleButton').length===0){
+        //SCORING
+        if(truePuzzles === state.prevPuzzles){
+            state.score -= 6;
+        }else if (truePuzzles < state.prevPuzzles){
+            state.score -= 6;
+        }
+        if (state.score <0){
+            state.score = 6;
+        }
+
+        state.prevPuzzles = truePuzzles;
+    }
+
+    if($('.shuffleButton').length && truePuzzles>0){
         $('.shuffleButton').remove();
+        $('#shuffleStage').remove();
+        state.prevPuzzles = truePuzzles;
     }
-
-    //SCORING
-    if(truePuzzles === state.prevPuzzles){
-        state.score -= 6;
-    }else if (truePuzzles < state.prevPuzzles){
-        state.score -= 6;
-    }
-    if (state.score <0){
-        state.score = 6;
-    }
-
-    state.prevPuzzles = truePuzzles;
+    console.log(`${state.score}`);
 
     if(win){
 
