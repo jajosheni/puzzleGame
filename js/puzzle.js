@@ -188,8 +188,7 @@ function saveScore(state){
     xmlhttp.open("POST", serverURL, true);
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xmlhttp.send("score=" + state.score);
-    setTimeout(function(){/* wait 4 seconds */},4000);
-    window.location.reload();
+
 }
 
 $(function(){
