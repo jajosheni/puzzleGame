@@ -4,13 +4,41 @@ let state = { //Keep the state in javascript not in DOM
     piecesArray : [],
     shuffled : [],
     clickedPiece : null,
+    score : 100,
+    prevPuzzles: 0,
+    highScore: 0,
 };
+
+function loadScore(state){
+    let scores = [];
+    let xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function () {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            scores = xmlhttp.responseText.split('\r\n');
+            state.highScore = Math.max.apply(Math, scores);
+            $('#highscore').text(`Highscore: ${state.highScore}`);
+        }
+    };
+    xmlhttp.open("GET", "backend/score.txt", true);
+    xmlhttp.send();
+}
+
+function waitGame(){
+    $('#fileName').on('change', function() { // Listen for changes on image Input
+        startGame(this);
+    });
+}
 
 function startGame(inputImg){ //After getting the image, start the game.
     state.img.addEventListener('load', splitImage,false); // call function splitImage
                                                                // false-> loads bubbling in the end
     state.img.src = inputImg.files[0].name;
-    $('.uploadform').remove();
+
+    let imageTypes = ['.gif', '.jpeg', '.jpg', '.png', '.bmp'];
+    imageTypes.forEach(function(imageExt){
+        if(state.img.src.includes(imageExt))
+        $('.uploadform').remove();
+    });
 }
 
 function splitImage(){ // Split the image into 16 equal parts
@@ -86,6 +114,11 @@ function swapPieces(e, state){
         state.clickedPiece = e;
         $(state.clickedPiece).addClass('clicked-puzzle');
     }else{
+        if(e.src === state.clickedPiece.src){
+            $(state.clickedPiece).removeClass('clicked-puzzle'); //if the click is on the same image
+            state.clickedPiece=null;                             //don't check for validation
+            return;
+        }
         let temp = e.src;
         e.src = state.clickedPiece.src;
         state.clickedPiece.src = temp;
@@ -96,32 +129,70 @@ function swapPieces(e, state){
 }
 
 function checkPuzzle(state){
+    let truePuzzles=0;
     let win = true;
-    let shuffle=false;
+    let shuffle = false;
+
     let gameContainer = $('.game-container .piece-container');
     for(let i=0; i<gameContainer.length; i++){
         if(gameContainer[i].childNodes[1].src === gameContainer[i].childNodes[3].src){
             $(gameContainer[i].childNodes[3]).addClass('true-place');
+            truePuzzles++;
             shuffle=true;
         }else{
             win=false;
             $(gameContainer[i].childNodes[3]).removeClass('true-place');
         }
     }
+
     if(shuffle){
         $('.shuffleButton').remove();
     }
 
+    //SCORING
+    if(truePuzzles === state.prevPuzzles){
+        state.score -= 6;
+    }else if (truePuzzles < state.prevPuzzles){
+        state.score -= 6;
+    }
+    if (state.score <0){
+        state.score = 6;
+    }
+
+    state.prevPuzzles = truePuzzles;
+
     if(win){
-        alert('YOU WON');
+
         $('.true-place').removeClass('true-place');
+
+        saveScore(state);
+
+        $('<iframe id="winGame"></iframe>').appendTo('body');
+        alert('YOU WON!\n Score:' + state.score);
     }
 }
 
-function waitGame(){
-    $('#fileName').on('change', function() { // Listen for changes on image Input
-        startGame(this);
-    });
+function saveScore(state){
+    let xmlhttp;
+    xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function () {
+        console.log(xmlhttp.readyState + ' ' + xmlhttp.status);
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            console.log(xmlhttp.responseText);
+        }
+    };
+
+    let serverURL = 'http://localhost:1696';
+
+    xmlhttp.open("POST", serverURL, true);
+    xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    xmlhttp.send("score=" + state.score);
+    setTimeout(function(){/* wait 4 seconds */},4000);
+    window.location.reload();
 }
 
-$(waitGame);
+$(function(){
+    loadScore(state);
+    waitGame();
+});
