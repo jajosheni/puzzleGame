@@ -19,7 +19,7 @@ function loadScore(state){
             $('#highscore').text(`Highscore: ${state.highScore}`);
         }
     };
-    xmlhttp.open("GET", "backend/score.txt", true);
+    xmlhttp.open("GET", "score.txt", true);
     xmlhttp.send();
 }
 

@@ -8,10 +8,13 @@
 body{
     background-color: #282B2A;
     color: white;
-    max-width:60%;
     margin-left:auto;
     margin-right:auto;
     text-align: center;
+}
+
+header{
+    min-width: 600px;
 }
 
 form{
@@ -67,8 +70,8 @@ form{
 .game-container{
     margin: 20px auto 20px auto;
     font-size:0;
-    max-width: 90%;
-    min-width: 600px;
+    max-width: 1000px;
+    min-width: 400px;
 }
 
 .game-container .row div{

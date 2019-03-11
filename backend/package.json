@@ -1,0 +1,31 @@
+{
+  "name": "server.js",
+  "version": "2.0.0",
+  "description": "puzzleGame",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jajosheni/puzzleGame.git"
+  },
+  "keywords": [
+    "puzzle",
+    "javascript",
+    "expressjs",
+    "game"
+  ],
+  "author": "Sheni Hamitaj",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jajosheni/puzzleGame/issues"
+  },
+  "homepage": "https://github.com/jajosheni/puzzleGame#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "cors": "latest",
+    "express": "^4.16.4"
+  }
+}
