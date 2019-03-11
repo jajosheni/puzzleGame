@@ -5,6 +5,10 @@
     font-family: 'Staatliches', serif;
 }
 
+html{
+    min-width:600px;
+}
+
 body{
     background-color: #282B2A;
     color: white;
@@ -25,10 +29,10 @@ form{
     font-family: 'Arial', serif;
 }
 
-.shuffleButton{
+
+.blueButton{
     display: inline-block;
     max-width: 100%;
-    margin: auto;
     width: 8.0em;
     height: 2.2em;
     background-color: #2087e5;
@@ -37,13 +41,14 @@ form{
     border-radius: 1em;
     min-height: 2em;
     margin-bottom: 20px;
+    margin-right:5px;
 }
 
-.shuffleButton:hover{
+.blueButton:hover{
     background-color: #159858;
 }
 
-.shuffleButton:active{
+.blueButton:active{
     background-color: #155997;
 }
 
@@ -53,10 +58,9 @@ form{
     letter-spacing: 0.15em;
 }
 
-.highscore{
-    font-size: 15px;
+.highscore, .currentScore{
+    font-size: 16px;
     display: block;
-    margin-bottom: 10px;
 }
 
 .hidden{
@@ -83,7 +87,7 @@ form{
 }
 
 .piece-container{
-    width: 25%;
+    max-width: 25%;
 }
 
 .puzzle-piece{
@@ -94,6 +98,7 @@ form{
 }
 
 .puzzle-piece:hover{
+    transition: all .4s;
     opacity: .5;
 }
 
@@ -103,25 +108,15 @@ form{
     border: 0;
     margin: auto;
     display: block;
-    background-color: lightblue;
+    background-color: #215550;
 }
 
-.true-place{
-    border: 1px solid lightgreen;
+.true-place:hover{
+    transition: all .4s;
+    border: 1px solid #86eec1;
 }
 
-#winGame{
-    width: 100%;
-    height:100%;
-    position:fixed;
-    background-color: white;
-    opacity: .2;
-    text-align: center;
-    left:0;
-    top:0;
-}
-
-#shuffleStage{
+.iframes{
     width: 100%;
     height:100%;
     position:fixed;
@@ -129,4 +124,19 @@ form{
     opacity: .0;
     left:0;
     top:155px;
+}
+
+.bottomSection{
+    margin: 20px auto 20px auto;
+    width:10%;
+}
+
+.leftScore{
+    position: static;
+    display:block;
+    width:100%;
+    min-width: 150px;
+    margin: 5px auto 5px auto;
+    border: 2px solid lightgray;
+    border-radius: 10px;
 }

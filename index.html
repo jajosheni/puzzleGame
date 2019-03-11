@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.00, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.00, user-scalable=yes">
     <meta name="KEYWORDS" content="site,game,puzzle,javascript,dragndrop,school,project">
     <meta name="DESCRIPTION" content="Puzzle game, image divided 4x4, a software school project">
 
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="styles.css">
     <script src="https://code.jquery.com/jquery-3.2.0.min.js"></script>
-    <script src="js/puzzle.js"></script>
+    <script src="puzzle.js"></script>
 
     <title>Puzzle Game</title>
 </head>
@@ -20,10 +20,13 @@
 
 <div class="game-container">
     <div>
+        <button id="refresh" class="blueButton" onclick="window.location.reload()">
+            <span class="button-text">Refresh</span>
+        </button>
         <form id="uploadform" class="uploadform" action="index.html">
-            <input type="file" id="fileName">
+            <input type="file" id="fileName" class="blueButton">
         </form>
-        <button id="shuffle" class="shuffleButton">
+        <button id="shuffle" class="blueButton">
             <span class="button-text">Shuffle</span>
         </button>
         <span id="highscore" class="highscore">HighScore: </span>
@@ -35,8 +38,15 @@
     <div class="row two"></div>
     <div class="row three"></div>
     <div class="row four"></div>
-    <iframe id="shuffleStage"></iframe>
+    <iframe id="shuffleStage" class="iframes"></iframe>
 </div>
+
+<section>
+    <div id="js-score" class="bottomSection">
+        <span class="button-text leftScore" >Scores:</span>
+    </div>
+    <span id="currentScore" class="currentScore hidden">Score: 100</span>
+</section>
 
 </body>
 </html>

@@ -17,6 +17,13 @@ function loadScore(state){
             scores = xmlhttp.responseText.split('\r\n');
             state.highScore = Math.max.apply(Math, scores);
             $('#highscore').text(`Highscore: ${state.highScore}`);
+            scores.forEach(function(s){
+                if(s==='')
+                    return;
+                $('#js-score').append(
+                    `<span class="button-text leftScore" >${s}</span>`
+                );
+            });
         }
     };
     xmlhttp.open("GET", "score.txt", true);
@@ -25,20 +32,21 @@ function loadScore(state){
 
 function waitGame(){
     $('#fileName').on('change', function() { // Listen for changes on image Input
-        startGame(this);
+        if (this.files && this.files[0]) {
+            let reader = new FileReader();
+            reader.onload = startGame;
+            reader.readAsDataURL(this.files[0]);
+        }
     });
 }
 
 function startGame(inputImg){ //After getting the image, start the game.
     state.img.addEventListener('load', splitImage,false); // call function splitImage
                                                                // false-> loads bubbling in the end
-    state.img.src = inputImg.files[0].name;
+    state.img.src = inputImg.target.result;
 
-    let imageTypes = ['.gif', '.jpeg', '.jpg', '.png', '.bmp'];
-    imageTypes.forEach(function(imageExt){
-        if(state.img.src.includes(imageExt))
-        $('.uploadform').remove();
-    });
+    if(state.img.src.includes('data:image'))
+        $('#uploadform').remove();
 }
 
 function splitImage(){ // Split the image into 16 equal parts
@@ -67,7 +75,7 @@ function splitImage(){ // Split the image into 16 equal parts
     }
     //Remove Canvas & make a button eventListener
     $(ctx).remove();
-    $('.shuffleButton').click(function(){
+    $('#shuffle').on('click touch', function(){
         clearHTML(state);
         shuffleArray(state);
         createPuzzle(state);
@@ -79,6 +87,8 @@ function clearHTML(){
 }
 
 function shuffleArray(state){
+    $('#js-score').remove();
+    $('#currentScore').removeClass('hidden');
     let j, temp, i;
     for (i = state.shuffled.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1)); // randomize a number between 0 and 15
@@ -142,27 +152,31 @@ function checkPuzzle(state){
             $(gameContainer[i].childNodes[3]).removeClass('true-place');
         }
     }
+    let points = 6;
+    if(state.score < 51)
+        points=3;
 
-    if($('.shuffleButton').length===0){
+    if($('#shuffle').length===0){
         //SCORING
         if(truePuzzles === state.prevPuzzles){
-            state.score -= 6;
+            state.score -= points;
         }else if (truePuzzles < state.prevPuzzles){
-            state.score -= 6;
+            state.score -= points;
         }
         if (state.score <0){
-            state.score = 6;
+            state.score = 0;
+            gameOver(state);
         }
 
         state.prevPuzzles = truePuzzles;
     }
 
-    if($('.shuffleButton').length && truePuzzles>0){
-        $('.shuffleButton').remove();
+    if($('#shuffle').length && truePuzzles>0){
+        $('#shuffle').remove();
         $('#shuffleStage').remove();
         state.prevPuzzles = truePuzzles;
     }
-    console.log(`${state.score}`);
+    $('#currentScore').text(`Score: ${state.score}`);
 
     if(win){
 
@@ -170,9 +184,16 @@ function checkPuzzle(state){
 
         saveScore(state);
 
-        $('<iframe id="winGame"></iframe>').appendTo('body');
+        $('<iframe id="winGame" class="iframes"></iframe>').appendTo('body');
         alert('YOU WON!\n Score:' + state.score);
     }
+}
+
+function gameOver(state){
+    $('.true-place').removeClass('true-place');
+
+    $('<iframe id="gameOver" class="iframes" ></iframe>').appendTo('body');
+    alert('Game Over!');
 }
 
 function saveScore(state){
@@ -185,7 +206,7 @@ function saveScore(state){
         }
     };
 
-    let serverURL = 'http://localhost:1696';
+    let serverURL = 'http://localhost:80';
 
     xmlhttp.open("POST", serverURL, true);
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
