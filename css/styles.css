@@ -59,6 +59,7 @@ form{
 }
 
 .highscore, .currentScore{
+    margin-bottom: 4px;
     font-size: 16px;
     display: block;
 }
@@ -76,6 +77,19 @@ form{
     font-size:0;
     max-width: 1000px;
     min-width: 400px;
+}
+
+@keyframes neon2 {
+    from {
+        text-shadow: 0 0 10px #fff, 0 0 20px #d6ffea, 0 0 30px #28ff90, 0 0 40px #ff2900, 0 0 70px #228DFF, 0 0 80px #228DFF, 0 0 100px #228DFF, 0 0 150px #228DFF;
+    }
+    to {
+        text-shadow: 0 0 5px #fff, 0 0 10px #b5ffb0, 0 0 15px #99ff94, 0 0 20px #228DFF, 0 0 35px #228DFF, 0 0 40px #228DFF, 0 0 50px #228DFF, 0 0 75px #228DFF;
+    }
+}
+
+.js-animation{
+    animation: neon2 0.4s ease-in-out alternate;
 }
 
 .game-container .row div{

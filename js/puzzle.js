@@ -4,9 +4,11 @@ let state = { //Keep the state in javascript not in DOM
     piecesArray : [],
     shuffled : [],
     clickedPiece : null,
-    score : 100,
-    prevPuzzles: 0,
+    score : 0,
     highScore: 0,
+    truePuzzles: 0,
+    minMoves: 0,
+    points: 0.0,
 };
 
 function loadScore(state){
@@ -102,9 +104,9 @@ function createPuzzle(state){
     let piecesHTML;
     piecesHTML=[];
     for(let i=0; i < state.piecesArray.length; i++){
-        let temp = `<div class="piece-container">
+        let temp = `<div class="piece-container" onclick="swapPieces(this, state);">
                         <img src="${state.piecesArray[i]}" class="hidden-puzzle-piece">
-                        <img src="${state.shuffled[i]}" class="puzzle-piece" onclick="swapPieces(this, state);">
+                        <img src="${state.shuffled[i]}" class="puzzle-piece">
                     </div>`;
         piecesHTML.push(temp);
     }
@@ -119,81 +121,121 @@ function renderPuzzle(piecesHTML, state){
     $('.row.four').append(piecesHTML.slice(state.ROWS*3 , state.ROWS*4));
 }
 
-function swapPieces(e, state){
-    if(!state.clickedPiece){
-        state.clickedPiece = e;
-        $(state.clickedPiece).addClass('clicked-puzzle');
-    }else{
-        if(e.src === state.clickedPiece.src){
-            $(state.clickedPiece).removeClass('clicked-puzzle'); //if the click is on the same image
-            state.clickedPiece=null;                             //don't check for validation
-            return;
-        }
-        let temp = e.src;
-        e.src = state.clickedPiece.src;
-        state.clickedPiece.src = temp;
-        $(state.clickedPiece).removeClass('clicked-puzzle');
-        state.clickedPiece=null;
-        checkPuzzle(state);
-    }
-}
-
 function checkPuzzle(state){
-    let truePuzzles = 0;
+    let tPuzzles = 0;
     let win = true;
 
     let gameContainer = $('.game-container .piece-container');
     for(let i=0; i<gameContainer.length; i++){
         if(gameContainer[i].childNodes[1].src === gameContainer[i].childNodes[3].src){ //childnode[1] hidden img
             $(gameContainer[i].childNodes[3]).addClass('true-place');// childnode[3] shuffled piece
-            truePuzzles++;
+            tPuzzles++;
         }else{
             win=false;
             $(gameContainer[i].childNodes[3]).removeClass('true-place');
         }
     }
-    let points = 6;
-    if(state.score < 51)
-        points=3;
 
-    if($('#shuffle').length===0){
-        //SCORING
-        if(truePuzzles === state.prevPuzzles){
-            state.score -= points;
-        }else if (truePuzzles < state.prevPuzzles){
-            state.score -= points;
-        }
-        if (state.score <0){
-            state.score = 0;
-            gameOver(state);
-        }
-
-        state.prevPuzzles = truePuzzles;
-    }
-
-    if($('#shuffle').length && truePuzzles>0){
+    if($('#shuffle').length && tPuzzles>0){
         $('#shuffle').remove();
         $('#shuffleStage').remove();
-        state.prevPuzzles = truePuzzles;
+        state.truePuzzles = tPuzzles;
+        state.minMoves = state.ROWS**2 - state.truePuzzles;
+        state.points = 100.0/state.minMoves;
     }
-    $('#currentScore').text(`Score: ${state.score}`);
 
     if(win){
-
-        $('.true-place').removeClass('true-place');
-
-        saveScore(state);
-
-        $('<iframe id="winGame" class="iframes"></iframe>').appendTo('body');
-        alert('YOU WON!\n Score:' + state.score);
+        gameWon(state);
     }
 }
 
-function gameOver(state){
+function gameWon(state){
     $('.true-place').removeClass('true-place');
 
-    $('<iframe id="gameOver" class="iframes" ></iframe>').appendTo('body');
-    alert('Game Over!');
+    saveScore(state);
+
+    $('<iframe id="winGame" class="iframes"></iframe>').appendTo('body');
+    alert('YOU WON!\n Score:' + Math.floor(state.score));
+}
+
+function swapPieces(e, state){
+    if(!state.clickedPiece){
+        state.clickedPiece = e;
+        $(state.clickedPiece.lastElementChild).addClass('clicked-puzzle');
+    }else{
+        if(e.lastElementChild.src === state.clickedPiece.lastElementChild.src){
+            $(state.clickedPiece.lastElementChild).removeClass('clicked-puzzle');
+            state.clickedPiece=null; //if the click is on the same image don't check for validation
+            return;
+        }
+
+        let temp = e.lastElementChild.src;
+        e.lastElementChild.src = state.clickedPiece.lastElementChild.src; //swap puzzle pieces
+        state.clickedPiece.lastElementChild.src = temp;
+
+        let rightMove = checkPieces(state.clickedPiece, e);
+
+        $(state.clickedPiece.lastElementChild).removeClass('clicked-puzzle');
+        state.clickedPiece=null;
+
+        fireScore(state, rightMove);
+    }
+}
+
+function checkPieces(firstPiece, secondPiece){
+    let rightMove=0;
+    if(firstPiece.firstElementChild.src === firstPiece.lastElementChild.src){
+        $(firstPiece.lastElementChild).addClass('true-place');
+        rightMove++;
+    }else{
+        $(firstPiece.lastElementChild).removeClass('true-place');
+    }
+
+    if(secondPiece.firstElementChild.src === secondPiece.lastElementChild.src){
+        $(secondPiece.lastElementChild).addClass('true-place');
+        rightMove++;
+    }else{
+        $(secondPiece.lastElementChild).removeClass('true-place');
+    }
+
+    return rightMove;
+}
+
+function fireScore(state, rightMove){
+    if(rightMove===0){
+        state.minMoves++;
+        state.points=100/state.minMoves;
+        reducePoints(state);
+    }else if(rightMove===1){
+        state.score += state.points;
+    }else if(rightMove===2){
+        state.score += (state.points * 2);
+        glowScore();
+    }
+
+    $('#currentScore').text(`Score: ${Math.floor(state.score)}`);
+    checkPuzzle(state);
+}
+
+function glowScore(){
+    setTimeout(function(){
+        $('#currentScore').addClass('js-animation');
+    },800);
+    $('#currentScore').removeClass('js-animation');
+}
+
+function reducePoints(state){
+    if(state.score < 1){
+        return;
+    }else if(state.score < 15){
+        state.score -= 1;
+    }else if(state.score < 35){
+        state.score -= 4;
+    }else if(state.score < 60){
+        state.score -= 7;
+    }else if(state.score < 90) {
+        state.score -= 9;
+    }
 }
 
 function saveScore(state){
@@ -210,7 +252,7 @@ function saveScore(state){
 
     xmlhttp.open("POST", serverURL, true);
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-    xmlhttp.send("score=" + state.score);
+    xmlhttp.send("score=" + Math.floor(state.score));
 
 }
 
