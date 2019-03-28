@@ -3,7 +3,7 @@ Simple 4x4 puzzle game.
 
 No puzzle ID or coordinates are used,
 
-instead puzzle piece comparision is done;
+instead puzzle piece comparison is done;
 
 Written on javascript (&jquery).
 
